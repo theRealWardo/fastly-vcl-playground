@@ -11,16 +11,14 @@ The general idea is to write as much as possible in functions that you can unit 
 
 - Put functions in separate VCL files in the `functions` directory.
 - Put test files for those function in `tests`.
-- The tests run on your configured host at `/tests` by default.
+- [Configure backends](https://github.com/theRealWardo/fastly-vcl-playground/tree/master/config) in the `config` directory.
+- The VCL is uploaded to your Fastly service and run on your host at `/tests` by default.
 
 For example, `functions/transform.vcl` has the definition of a VCL function named `transform`.
 Unsurprisingly, `tests/transform_test.vcl` has unit tests for that VCL function.
+`tests/route_origin_test.vcl` shows an example of unit testing routing logic that relies on backend configuration.
 
-**This framework using custom VCL** so you should be familiar with [Fastly's documentation on Custom VCL](https://docs.fastly.com/vcl/custom-vcl/creating-custom-vcl/) and know that **these scripts configure a single main VCL file NOT SNIPPETS**.
-
-Functions and the test framework are prepended to a "template" VCL which is provided as an argument to `run.sh`.
-
-Service backends can be configured in a `.backends` file, [learn more about that here](https://github.com/theRealWardo/fastly-vcl-playground/tree/master/config).
+**This framework is using a single main custom VCL** so you should be familiar with [Fastly's documentation on Custom VCL](https://docs.fastly.com/vcl/custom-vcl/creating-custom-vcl/). As always, test this in a non-production environment first...
 
 
 ## Setup
