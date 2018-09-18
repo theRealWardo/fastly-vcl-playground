@@ -1,6 +1,5 @@
 sub check {
   declare local var.TAP-Test INTEGER;
-
   set var.TAP-Test = std.atoi(req.http.TAP-Test);
   set var.TAP-Test += 1;
   set req.http.TAP-Test = var.TAP-Test;
@@ -8,7 +7,12 @@ sub check {
   call assert;
 
   if (req.http.result != "pass") {
-    set req.http.TAP-Log = req.http.TAP-Log + req.http.TAP-Test + ". FAIL - " + req.http.message + LF;
+    declare local var.TAP-Failures INTEGER;
+    set var.TAP-Failures = std.atoi(req.http.TAP-Failures);
+    set var.TAP-Failures += 1;
+    set req.http.TAP-Failures = var.TAP-Failures;
+
+    set req.http.TAP-Log = req.http.TAP-Log + req.http.name + " - FAILED" + LF + "  " + req.http.message + LF + LF;
     set req.http.TAP-Result = "fail";
   }
 }
@@ -20,6 +24,9 @@ sub vcl_recv {
   }
 
   if (req.url.path == "/tests") {
+    set req.http.TAP-Log = "";
+    set req.http.TAP-Test = "0";
+    set req.http.TAP-Failures = "0";
     call tests;
     if (req.http.TAP-Result == "fail") {
       error 901;
@@ -80,18 +87,25 @@ sub vcl_miss {
 
 sub vcl_deliver {
 #FASTLY deliver
+  if (req.url.path == "/tests") {
+    call x_vcl_md5;
+  }
   return(deliver);
 }
 
 sub vcl_error {
 #FASTLY error
   if (obj.status == 900) {
+    set obj.status = 200;
+    set obj.response = "OK";
     set obj.http.content-type = "text/plain";
-    synthetic "1.." + req.http.TAP-Test + LF + LF + "All tests passed.";
+    synthetic "1.." + req.http.TAP-Test + LF + LF + "PASS." + LF;
     return (deliver);
   } else if (obj.status == 901) {
+    set obj.status = 500;
+    set obj.response = "Internal Server Error";
     set obj.http.content-type = "text/plain";
-    synthetic "1.." + req.http.TAP-Test + LF + LF + "FAILED." + LF + LF + req.http.TAP-Result;
+    synthetic "1.." + req.http.TAP-Test + LF + LF + req.http.TAP-Failures + " FAILED." + LF + LF + req.http.TAP-Log + LF;
     return (deliver);
   }
 }

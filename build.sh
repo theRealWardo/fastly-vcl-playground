@@ -40,13 +40,25 @@ function build_output {
   output_tmp_file=$(mktemp /tmp/fastly-vcl.XXXXXX)
   echo "${FUNCTIONS}" >> $output_tmp_file
   echo "${TESTS}" >> $output_tmp_file
-  
+
   # Call all of the tests in a "tests" function.
   echo "# -- GEN -- TESTS" >> $output_tmp_file
   echo "sub tests {" >> $output_tmp_file
   for t in $TEST_NAMES; do
     echo "  call ${t}_test;" >> $output_tmp_file
   done
+  echo "}" >> $output_tmp_file
+  echo "# -- END -- TESTS" >> $output_tmp_file
+  printf "\n\n" >> $output_tmp_file
+
+  # Generate the X-VCL-MD5 header function.
+  VCL_MD5=$1
+  if [[ -z $VCL_MD5 ]]; then
+    VCL_MD5="dev"
+  fi
+  echo "# -- GEN -- x_vcl_md5" >> $output_tmp_file
+  echo "sub x_vcl_md5 {" >> $output_tmp_file
+  echo "  set resp.http.X-VCL-MD5 = \"${VCL_MD5}\";" >> $output_tmp_file
   echo "}" >> $output_tmp_file
   echo "# -- END -- TESTS" >> $output_tmp_file
   printf "\n\n" >> $output_tmp_file
@@ -59,4 +71,4 @@ function build_output {
 
 compile_tests
 compile_functions
-build_output
+build_output $1
