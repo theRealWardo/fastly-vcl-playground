@@ -44,9 +44,8 @@ DOMAIN=http://test.mydomain.com
 ## Getting Started
 
 1. Setup your enviroment by creating the necessary `.env` file.
-1. Write some functions, tests, a new template maybe.
-1. Configure some backends in a `.backends` file.
-1. `./run.sh ${TEMPLATE_PATH} ${BACKENDS_PATH}`
+1. Write some functions, tests, a new template or backend configuration.
+1. `./run.sh ${TEMPLATE_PATH} ${BACKENDS_PATH}` will generate your main VCL, upload it, and run the tests. To run the example, try `./run.sh templates/testing.vcl config/testing.backends`.
 1. You should see some your test output!
 
 ## Other Resources
