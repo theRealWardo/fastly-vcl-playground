@@ -1,0 +1,17 @@
+BACKEND
+  name=origin_0
+  hostname=httpbin.org
+  address=httpbin.org
+  port=80
+
+BACKEND
+  name=origin_1
+  hostname=fastly.com
+  address=fastly.com
+  port=80
+
+BACKEND
+  name=origin_2
+  hostname=blog.mux.com
+  address=blog.mux.com
+  port=80
