@@ -11,16 +11,17 @@ are defined in the Fastly documentation: https://docs.fastly.com/api/config#back
 **Note that each of the pairs in this file must be URL safe!**
 
 Example `.backends` file:
+
 ```
 BACKEND
-	name=origin_0
+  name=origin_0
   hostname=httpbin.org
   address=httpbin.org
-	port=80
+  port=80
 
 BACKEND
-	name=origin_1
+  name=origin_1
   hostname=fastly.com
   address=fastly.com
-	port=80
+  port=80
 ```
