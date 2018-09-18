@@ -2,8 +2,9 @@
 
 **A "framework" for playing with and testing VCL on Fastly.**
 
-Let's be honest, this is just a pile of helpful bash scripts...
+Let's be honest, this is just a pile of helpful bash scripts that do this...
 
+![demo gif](https://raw.githubusercontent.com/theRealWardo/fastly-vcl-playground/master/demo.gif)
 
 ## Overview
 
